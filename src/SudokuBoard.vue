@@ -175,11 +175,6 @@ function handleKeydown(event) {
     let r = Math.floor(selected.value / 9)
     let c = selected.value % 9
 
-    if (event.key === "Backspace") {
-        userBoard.value[r][c] = 0
-        highlight(r, c)
-    }
-
     if (event.key === "ArrowRight") {
       c = (c + 1) % 9
     }
@@ -202,7 +197,12 @@ function handleKeydown(event) {
     }
 
     if (fixed.value[r][c]) {
-        return
+      return
+    }
+
+    if (event.key === "Backspace") {
+        userBoard.value[r][c] = 0
+        highlight(r, c)
     }
 
     const num = Number(event.key)
@@ -212,15 +212,15 @@ function handleKeydown(event) {
         
         highlight(r, c)
 
-        localStorage.setItem(
-          "sudoku-user",
-          JSON.stringify(userBoard.value)
-        )
-
         if (solutionCheck()) {
             emit("solved")
         }
     }
+
+    localStorage.setItem(
+      "sudoku-user",
+      JSON.stringify(userBoard.value)
+    )
 
 }
 
@@ -283,6 +283,7 @@ watch(
 )
 
 onMounted(() => {
+  console.log(fixed)
   loadSudoku()
 })
 
